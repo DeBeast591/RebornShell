@@ -37,6 +37,8 @@ def gen_from_dict(prompt: dict) -> str:
       elif prompt["placeholders"][x].startswith("utils:"):
         if prompt["placeholders"][x] == "utils:pwd":
           prompt_str += utils.get_pwd()
+        elif prompt["placeholders"][x] == "utils:pwd_small":
+          prompt_str += utils.get_pwd_small()
         continue
       
       prompt_str += prompt["placeholders"][x]
@@ -47,3 +49,4 @@ def gen_from_dict(prompt: dict) -> str:
       prompt_str += x
   cr.deinit()
   return prompt_str
+

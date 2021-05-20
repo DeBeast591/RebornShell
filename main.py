@@ -17,6 +17,8 @@ import yaml
 import utils
 from utils import prompt
 from utils import statusbar
+# stdlib
+import asyncio
 
 
 # config
@@ -45,5 +47,7 @@ session.show_status_bar = config["general"]["show_status_bar"]
 session.history_completions = config["general"]["history_completions"]
 session.get_prompt = custom_prompt
 session.get_statusbar = custom_statusbar
-session.start()
+session.threaded_completion = config["general"]["threaded_completion"]
+session.aliases = config["aliases"]
+asyncio.run(session.start())
 

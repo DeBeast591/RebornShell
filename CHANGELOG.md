@@ -23,7 +23,7 @@ Just a skeleton of the Shell
 - History file doesn't use the correct location, and always makes `rbsh_history` file in the current directory.
 
 
-## 0.1.1 - Prompt updates
+# 0.2 - Customization, aliases, and async
 **Added:**
 - A `CONTRIBUTING.md` and a 'contributing' section in the `README.md`
 - A prompt creation system in the `config.yml`
@@ -31,7 +31,11 @@ Just a skeleton of the Shell
   - See the `config.yml` for information
 - History file can be disabled in the `config.yml` by setting `history_file` to `"None"`
 - Updated `install.sh`
+- Added a `help` command
+- Made the shell use a little bit of Async
+- `README.md` now has documentation on configuration
+- Aliases!
 
 **Known Bugs:**
 - History file is still very bugged
-- Colorama is broken on the `repl.it` console, untested on local machines.
+- Colorama seems to be broken on the `repl.it` console, untested on local machines.

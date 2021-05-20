@@ -2,6 +2,7 @@ general:
   show_status_bar: true
   history_completions: false
   history_file: "None"
+  threaded_completion: true
 
 # The autocomplete is a tree, if you type `sudo` then it'll show the items in `sudo`,
 # and anything in `pacman` will be shown when you type `pacman`. It's best understood by example.
@@ -39,3 +40,10 @@ statusbar:
   placeholders:
     "%name": "cmd:whoami"
     "%pwd": "utils:pwd"
+
+
+# Aliases, just a dict, not a tree this time
+aliases:
+  # alias: command
+  ":q": "exit"
+  "py": "python3"
