@@ -1,0 +1,18 @@
+general:
+  show_status_bar: false
+  history_completions: false
+  history_file: "rbsh_history"
+
+# The autocomplete is a tree, if you type `sudo` then it'll show the items in `sudo`,
+# and anything in `pacman` will be shown when you type `pacman`. It's best understood
+# by example.
+autocomplete:
+  sudo:
+    pacman:
+      "-S": None
+      "-Syu": None
+      "-R": None
+  yay:
+    "-S": None
+    "-R": None
+
