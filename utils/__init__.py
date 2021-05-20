@@ -33,7 +33,7 @@ def get_pwd() -> str:
 # shell class
 # TODO: clean up!
 class Shell:
-  def __init__(self, history_file: str="~/.rbsh_history") -> None:
+  def __init__(self, history_file: str="rbsh_history") -> None:
     # config
     self.completer           = {}
     self.bindings            = binds.default_bindings
@@ -42,7 +42,7 @@ class Shell:
     self.history_file        = history_file
 
     self.session = prompt_toolkit.PromptSession(
-      history = prompt_toolkit.history.FileHistory(history_file)
+      history = prompt_toolkit.history.FileHistory (history_file) if self.history_file != "None" else None
     )
     return
   
@@ -62,7 +62,7 @@ class Shell:
         self.execute_cmd(action)
     return
   
-  def bottom_toolbar(self) -> list:
+  def get_statusbar(self) -> list:
     text = "RebornShell"
     return [
       ("class:toolbar", text)
@@ -75,7 +75,7 @@ class Shell:
       completer      = self.completer,
       auto_suggest   = prompt_toolkit.auto_suggest.AutoSuggestFromHistory() if self.history_completions else None,
       key_bindings   = self.bindings,
-      bottom_toolbar = self.bottom_toolbar if self.show_status_bar else None,
+      bottom_toolbar = self.get_statusbar if self.show_status_bar else None,
       mouse_support  = True,
       is_password    = False
     )

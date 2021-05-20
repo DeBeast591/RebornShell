@@ -1,11 +1,10 @@
 general:
-  show_status_bar: false
+  show_status_bar: true
   history_completions: false
-  history_file: "rbsh_history"
+  history_file: "None"
 
 # The autocomplete is a tree, if you type `sudo` then it'll show the items in `sudo`,
-# and anything in `pacman` will be shown when you type `pacman`. It's best understood
-# by example.
+# and anything in `pacman` will be shown when you type `pacman`. It's best understood by example.
 autocomplete:
   sudo:
     pacman:
@@ -16,3 +15,27 @@ autocomplete:
     "-S": None
     "-R": None
 
+
+# The prompt is made from a tree as well
+# This is a little more difficult to grasp
+prompt:
+  order:
+    - "%pwd"
+    - " $: "
+  placeholders:
+    # gets pwd, except formatted nicely
+    "%pwd": "utils:pwd_small"
+
+
+# As always, the status bar is also a tree.
+# The configuration for the status bar is similar to that of the prompt
+statusbar:
+  order:
+    - "RebornShell"
+    - " - "
+    - "%name"
+    - " - "
+    - "%pwd"
+  placeholders:
+    "%name": "cmd:whoami"
+    "%pwd": "utils:pwd"

@@ -6,5 +6,6 @@ read a
 pip3 install pyyaml
 pip3 install prompt_toolkit
 pip3 install pygments
+pip3 install colorama
 
 echo "Done!"

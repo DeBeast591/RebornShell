@@ -9,6 +9,7 @@ python = "^3.8"
 PyYAML = "^5.4.1"
 prompt_toolkit = "^3.0.18"
 Pygments = "^2.9.0"
+colorama = "^0.4.4"
 
 [tool.poetry.dev-dependencies]
 
