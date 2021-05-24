@@ -2,22 +2,14 @@
 
 
 # imports
-import colorama as cr
 # stdlib
 import subprocess
 # local
 import utils
 
 
-# init
-cr.init(autoreset=True)
-cr.deinit()
-
-
 # functions
 def gen_from_dict(prompt: dict) -> str:
-  cr.reinit()
-
   prompt_str = ""
   for x in prompt["order"]:
     # placeholders
@@ -47,6 +39,7 @@ def gen_from_dict(prompt: dict) -> str:
       prompt_str += "\033m" + x + "m"
     else:
       prompt_str += x
-  cr.deinit()
   return prompt_str
+
+
 

@@ -39,3 +39,21 @@ Just a skeleton of the Shell
 **Known Bugs:**
 - History file is still very bugged
 - Colorama seems to be broken on the `repl.it` console, untested on local machines.
+
+# 0.2.1 - Fuzzy finding and rbshctl updates
+**Added:**
+- Fuzzy finding
+- RBSHCtl has more functions
+- `Shell` class has args rather than needing to change the variables manually.
+
+**Removed:**
+- Colorama
+- Removed `utils/binds.py`
+- `prompt_exit()` function from the `Shell` class
+
+**Fixed Bugs:**
+- Pressing `ctrl+c` no longer exits the Shell
+- Keybindings actually work now
+
+**Known Bugs:**
+- History is, as always, bugged.

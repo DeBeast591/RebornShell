@@ -3,15 +3,14 @@
 # Enjoy!
 
 
-###################
-# Todo Area
-# TODO: clean up this file
-# TODO: make shell async or make shell fast
-###################
+# RBSH Version
+# it's at the top of this file so i dont forget to update it
+RBSH_VERSION = "RBSH Version 0.2.1"
 
 
 # imports
 from prompt_toolkit.completion import NestedCompleter
+from prompt_toolkit.key_binding import KeyBindings
 import yaml
 # local imports
 import utils
@@ -24,30 +23,51 @@ import asyncio
 # config
 with open("config.yml") as f:
   config = yaml.load(f, Loader=yaml.FullLoader)
-# print(config)
+
 
 # autocomplete tree
 autocomplete_tree = {}
 for k, v in config["autocomplete"].items():
   autocomplete_tree[k] = v
+# replaces all `"None"`s with `None`s
 autocomplete_tree = utils.replace_deep_with_none(autocomplete_tree, "None")
+# makes a completer
 completer = NestedCompleter.from_nested_dict(autocomplete_tree)
 
+
+# keybinds
+key_binds = KeyBindings()
+
+@key_binds.add("c-c")
+def _(event):
+  pass
+
+
+# generates a prompt and statusbar from the config
 # custom prompt
 def custom_prompt():
   return prompt.gen_from_dict(config["prompt"])
-# custom statubar
+# custom statusbar
 def custom_statusbar():
   return statusbar.gen_from_dict(config["statusbar"])
 
+
 # start session
-session = utils.Shell(history_file=config["general"]["history_file"])
-session.completer = completer
-session.show_status_bar = config["general"]["show_status_bar"]
-session.history_completions = config["general"]["history_completions"]
+session = utils.Shell(
+  history_file = config["general"]["history_file"],
+  completer = completer,
+  bindings = key_binds,
+  show_status_bar = config["general"]["show_status_bar"],
+  history_completions = config["general"]["history_completions"],
+  threaded_completion = config["general"]["threaded_completion"],
+  aliases = config["aliases"],
+  version = RBSH_VERSION
+)
+
+# session settings
 session.get_prompt = custom_prompt
 session.get_statusbar = custom_statusbar
-session.threaded_completion = config["general"]["threaded_completion"]
-session.aliases = config["aliases"]
+
+# start the session
 asyncio.run(session.start())
 

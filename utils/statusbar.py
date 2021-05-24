@@ -2,22 +2,14 @@
 
 
 # imports
-import colorama as cr
 # stdlib
 import subprocess
 # local
 import utils
 
 
-# init
-cr.init(autoreset=True)
-cr.deinit()
-
-
 # functions
 def gen_from_dict(prompt: dict) -> str:
-  cr.reinit()
-
   prompt_str = ""
   for x in prompt["order"]:
     # placeholders
@@ -39,6 +31,8 @@ def gen_from_dict(prompt: dict) -> str:
           prompt_str += utils.get_pwd()
         elif prompt["placeholders"][x] == "utils:pwd_small":
           prompt_str += utils.get_pwd_small()
+        elif prompt["placeholders"][x] == "utils:isfuzzy":
+          prompt_str += utils.is_fuzzy()
         continue
       
       prompt_str += prompt["placeholders"][x]
@@ -47,7 +41,6 @@ def gen_from_dict(prompt: dict) -> str:
       prompt_str += "\033m" + x + "m"
     else:
       prompt_str += x
-  cr.deinit()
   return [
     ("class:toolbar", prompt_str)
   ]

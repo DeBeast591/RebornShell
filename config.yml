@@ -15,18 +15,28 @@ autocomplete:
   yay:
     "-S": None
     "-R": None
+  rbshctl:
+    get:
+      show_status_bar: None
+      aliases: None
+      completer: None
+    version: None
+  help: None
+  cd:
+    "..": None
+  clear: None
+  ls:
+    "-a": None
 
 
 # The prompt is made from a tree as well
 # This is a little more difficult to grasp
 prompt:
   order:
-    - "%pwd"
-    - " $: "
+    - " :"
   placeholders:
     # gets pwd, except formatted nicely
     "%pwd": "utils:pwd_small"
-
 
 # As always, the status bar is also a tree.
 # The configuration for the status bar is similar to that of the prompt

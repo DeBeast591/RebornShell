@@ -8,8 +8,6 @@ RBSH (Pronounced "rub-ish") is a modern, powerful, and lightweight Linux shell m
   - `pip(3) install prompt_toolkit`
 - Pygments
   - `pip(3) install pygments`
-- Colorama
-  - `pip(3) install colorama`
 
 
 # Installation
