@@ -9,7 +9,7 @@ import utils
 
 
 # functions
-def gen_from_dict(prompt: dict) -> str:
+def gen_from_dict(prompt: dict, shell=None) -> str:
   prompt_str = ""
   for x in prompt["order"]:
     # placeholders
@@ -31,6 +31,10 @@ def gen_from_dict(prompt: dict) -> str:
           prompt_str += utils.get_pwd()
         elif prompt["placeholders"][x] == "utils:pwd_small":
           prompt_str += utils.get_pwd_small()
+        elif prompt["placeholders"][x] == "utils:isfuzzy":
+          prompt_str += utils.is_fuzzy(shell)
+        elif prompt["placeholders"][x] == "utils:ispymode":
+          prompt_str += utils.is_pymode(shell)
         continue
       
       prompt_str += prompt["placeholders"][x]

@@ -7,7 +7,10 @@ from prompt_toolkit.completion import FuzzyCompleter
 # stdlib
 import subprocess
 import os
-
+from io import StringIO
+from contextlib import redirect_stdout
+import re
+import traceback
 
 
 # replace all in a dict, including nested ones.
@@ -23,12 +26,14 @@ def replace_deep_with_none(data: dict, a: str) -> any:
     else:
         return data
 
+
 # gets the user's pwd
 def get_pwd() -> str:
   pwd = subprocess.check_output("pwd")
   pwd = pwd.decode("UTF-8").strip("\n")
   pwd = pwd.replace(os.path.expanduser("~"), "~")
   return pwd
+
 
 # gets the user's pwd and makes it smaller
 def get_pwd_small() -> str:
@@ -38,11 +43,13 @@ def get_pwd_small() -> str:
     pwd += "/"
   return pwd
 
+
 # gets the user's pwd without any formatting
 def get_pwd_raw() -> str:
   pwd = subprocess.check_output("pwd")
   pwd = pwd.decode("UTF-8").strip("\n")
   return pwd
+
 
 # formats a dict to make it look good
 def format_dict(dict_: dict) -> None:
@@ -50,9 +57,17 @@ def format_dict(dict_: dict) -> None:
     print(str(k) + ": " + str(v))
   return
 
+
 # returns if the shell is using fuzzy completion or not
 def is_fuzzy(shell) -> str:
-  if shell.completer == shell.fuzzy_completer:
+  if shell.fuzzy:
+    return "yes"
+  return "no"
+
+
+# returns if the shell is using pymode or not
+def is_pymode(shell) -> str:
+  if shell.pymode:
     return "yes"
   return "no"
 
@@ -70,6 +85,7 @@ class Shell:
     aliases: any = None,
     version: str = "RBSH Version N/a"
   ) -> None:
+
     # config
     self.completer = completer
     self.bindings = bindings
@@ -84,6 +100,9 @@ class Shell:
     self.goback = get_pwd_raw()
     self.current_completer = self.completer
     self.fuzzy_completer = None
+    self.poke_data = {}
+    self.pymode = False
+    self.fuzzy = False
 
     # prompt session
     self.session = prompt_toolkit.PromptSession(
@@ -92,14 +111,20 @@ class Shell:
 
     return
   
+
   async def start(self) -> None:
     self.current_completer = self.completer
     self.fuzzy_completer = FuzzyCompleter(self.completer)
+    
     while True:
       with prompt_toolkit.patch_stdout.patch_stdout():
         # read
         action = await self.prompt_user()
       action = self.format_aliases(action)
+      action = self.pype(action)
+
+      if action == None:
+        continue
       
       # shell-handled commands
       if action in ["quit", "exit"]:
@@ -120,20 +145,32 @@ class Shell:
         self.rbshctl(action)
       elif action.startswith("help"):
         self.help()
+      elif action.startswith("poke"):
+        self.poke(action)
+      elif action.startswith("peek"):
+        self.peek(action)
       elif action in ["", "\n"]:
         continue
       else:
         # eval/print
+        if self.pymode:
+          try:
+            exec(action)
+          except Exception:
+            traceback.print_exc()
+          continue
         self.execute_cmd(action)
     # loop
     return
   
+
   def get_statusbar(self) -> list:
     text = "RebornShell"
     return [
       ("class:toolbar", text)
     ]
   
+
   async def prompt_user(self) -> None:
     # get input async
     prompt = self.get_prompt()
@@ -150,6 +187,7 @@ class Shell:
     )
     return action
   
+
   def execute_cmd(self, cmd: str) -> None:
     '''
     Executes a command outside the shell
@@ -163,6 +201,7 @@ class Shell:
       pass
     return
   
+
   def rbshctl(self, cmd: str) -> None:
     '''
     RBSH Control
@@ -178,7 +217,10 @@ rbshctl toggle [setting]""")
         print(format_dict(self.__dict__))
         return
       cmd = cmd.replace("rbshctl get ", "", 1)
-      print(self.__dict__[cmd])
+      try:
+        print(self.__dict__[cmd])
+      except KeyError:
+          print("Setting not found.")
     elif cmd.startswith("rbshctl version"):
       print(self.VERSION)
     elif cmd.startswith("rbshctl toggle"):
@@ -187,8 +229,12 @@ rbshctl toggle [setting]""")
           self.current_completer = self.fuzzy_completer
         else:
           self.current_completer = self.completer
+        self.fuzzy = not self.fuzzy
+      if cmd == "rbshctl toggle pymode":
+        self.pymode = not self.pymode
     return
   
+
   def get_prompt(self) -> str:
     '''
     Gets the default prompt and returns it
@@ -198,6 +244,7 @@ rbshctl toggle [setting]""")
       " $ "
     )
   
+
   def help(self) -> None:
     '''
     Prints help
@@ -211,12 +258,69 @@ Shell Commands:
  - `quit` and `exit` - Exit the shell""")
     return
     
+
   def format_aliases(self, string: str) -> str:
     '''
     Replaces the aliases in the string with the commands they corrispond to.
     '''
     new_str = string
+    # for x in self.aliases.keys():
+    #   if x in new_str:
+    #     new_str = new_str.replace(x, self.aliases[x])
     for x in self.aliases.keys():
-      if x in new_str:
-        new_str = new_str.replace(x, self.aliases[x])
+      if new_str.startswith(x):
+        if x + " " in new_str or x == new_str:
+          new_str = new_str.replace(x, self.aliases[x], 1)
     return new_str
+  
+
+  def poke(self, command: str) -> None:
+    '''
+    Poke data into `self.poke_data`
+    '''
+    command = command.replace("poke ", "", 1)
+    self.poke_data[command.split()[0]] = command.split()[1]
+    return
+
+
+  def peek(self, command: str) -> None:
+    '''
+    Get data from `self.poke_data`
+    '''
+    try:
+      print(self.poke_data[command.replace("peek ", "", 1)])
+    except KeyError:
+      print("RBSH: peek: Key `%s` not found." % command.replace("peek ", "", 1))
+    return
+
+
+  def pype(self, text: str) -> str:
+    '''
+    Replaces text with the Pype data
+    '''
+    new_text = text
+    try:
+      sub = re.search('s;(.*);e', text)
+
+      if not sub:
+        return text
+      sub = sub.group(1)
+
+      f = StringIO()
+      with redirect_stdout(f):
+        exec(sub)
+      s = f.getvalue() + " "
+
+      new_text = new_text.replace("s;" + sub + ";e", s, 1)
+    except Exception as e:
+      print(e)
+      return
+    return new_text
+  
+
+  def run_some_pie(self, text: str) -> str:
+    '''
+    Runs some Python code, for Python mode
+    '''
+    return exec(text)
+

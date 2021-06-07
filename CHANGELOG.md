@@ -40,6 +40,7 @@ Just a skeleton of the Shell
 - History file is still very bugged
 - Colorama seems to be broken on the `repl.it` console, untested on local machines.
 
+
 # 0.2.1 - Fuzzy finding and rbshctl updates
 **Added:**
 - Fuzzy finding
@@ -57,3 +58,16 @@ Just a skeleton of the Shell
 
 **Known Bugs:**
 - History is, as always, bugged.
+
+
+# 0.2.2 - Pypes and Py Mode
+**Added:**
+- "Pype"-ing
+  - By surrounding Python code in `s;` and `;e`, you can get the output of the code and use that
+  - Ex: `echo s;print("text");e` prints `test`
+- Py Mode, allowing you to run Python code in RBSH if you switch to the mode.
+  - It's a mode because having a shell *and* Python can cause some conflicting bugs, and I'm not ready to deal with that...
+
+**Fixed Bugs:**
+- History file does work! It just needed an **absolute** path, so `~` doesn't work.
+- Aliases no longer replace any instance of text, just the first ones

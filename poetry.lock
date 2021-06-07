@@ -11,6 +11,14 @@ wcwidth = "*"
 
 [[package]]
 category = "main"
+description = "Pure-python FIGlet implementation"
+name = "pyfiglet"
+optional = false
+python-versions = "*"
+version = "0.8.post1"
+
+[[package]]
+category = "main"
 description = "Pygments is a syntax highlighting package written in Python."
 name = "pygments"
 optional = false
@@ -34,13 +42,17 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "5969917babfdf77400c17a3c6df4572d3f4ae95c9c22c1522516464739b26f21"
+content-hash = "e73aaab0116fa6454aed6a89861fab46d8007dfeb7220a6dad215e2f7da8e098"
 python-versions = "^3.8"
 
 [metadata.files]
 prompt-toolkit = [
     {file = "prompt_toolkit-3.0.18-py3-none-any.whl", hash = "sha256:bf00f22079f5fadc949f42ae8ff7f05702826a97059ffcc6281036ad40ac6f04"},
     {file = "prompt_toolkit-3.0.18.tar.gz", hash = "sha256:e1b4f11b9336a28fa11810bc623c357420f69dfdb6d2dac41ca2c21a55c033bc"},
+]
+pyfiglet = [
+    {file = "pyfiglet-0.8.post1-py2.py3-none-any.whl", hash = "sha256:d555bcea17fbeaf70eaefa48bb119352487e629c9b56f30f383e2c62dd67a01c"},
+    {file = "pyfiglet-0.8.post1.tar.gz", hash = "sha256:c6c2321755d09267b438ec7b936825a4910fec696292139e664ca8670e103639"},
 ]
 pygments = [
     {file = "Pygments-2.9.0-py3-none-any.whl", hash = "sha256:d66e804411278594d764fc69ec36ec13d9ae9147193a1740cd34d272ca383b8e"},

@@ -1,7 +1,8 @@
 general:
   show_status_bar: true
-  history_completions: false
-  history_file: "None"
+  history_completions: true
+  # this path must have the username changed to work properly.
+  history_file: "/home/runner/rbsh_history"
   threaded_completion: true
 
 # The autocomplete is a tree, if you type `sudo` then it'll show the items in `sudo`,
@@ -17,16 +18,22 @@ autocomplete:
     "-R": None
   rbshctl:
     get:
-      show_status_bar: None
       aliases: None
       completer: None
     version: None
+    toggle:
+      fuzzy: None
+      pymode: None
   help: None
   cd:
     "..": None
+    "/": None
   clear: None
   ls:
     "-a": None
+  exit: None
+  test: None
+  goback: None
 
 
 # The prompt is made from a tree as well
@@ -34,9 +41,7 @@ autocomplete:
 prompt:
   order:
     - " :"
-  placeholders:
-    # gets pwd, except formatted nicely
-    "%pwd": "utils:pwd_small"
+  placeholders: None
 
 # As always, the status bar is also a tree.
 # The configuration for the status bar is similar to that of the prompt
@@ -47,9 +52,12 @@ statusbar:
     - "%name"
     - " - "
     - "%pwd"
+    - " - IsFuzzy? "
+    - "%fuzzy"
   placeholders:
     "%name": "cmd:whoami"
     "%pwd": "utils:pwd"
+    "%fuzzy": "utils:isfuzzy"
 
 
 # Aliases, just a dict, not a tree this time
@@ -57,3 +65,4 @@ aliases:
   # alias: command
   ":q": "exit"
   "py": "python3"
+  "pymode": "rbshctl toggle pymode"

@@ -5,7 +5,7 @@
 
 # RBSH Version
 # it's at the top of this file so i dont forget to update it
-RBSH_VERSION = "RBSH Version 0.2.1"
+RBSH_VERSION = "RBSH Version 0.2.2"
 
 
 # imports
@@ -43,15 +43,6 @@ def _(event):
   pass
 
 
-# generates a prompt and statusbar from the config
-# custom prompt
-def custom_prompt():
-  return prompt.gen_from_dict(config["prompt"])
-# custom statusbar
-def custom_statusbar():
-  return statusbar.gen_from_dict(config["statusbar"])
-
-
 # start session
 session = utils.Shell(
   history_file = config["general"]["history_file"],
@@ -63,6 +54,16 @@ session = utils.Shell(
   aliases = config["aliases"],
   version = RBSH_VERSION
 )
+
+
+# generates a prompt and statusbar from the config
+# custom prompt
+def custom_prompt():
+  return prompt.gen_from_dict(config["prompt"], shell=session)
+# custom statusbar
+def custom_statusbar():
+  return statusbar.gen_from_dict(config["statusbar"], shell=session)
+
 
 # session settings
 session.get_prompt = custom_prompt
